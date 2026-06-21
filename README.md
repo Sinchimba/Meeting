@@ -24,7 +24,7 @@ A production-grade, full-stack platform enabling real-time communication between
     │                  │                  │
     │                  │                  │
 ┌───▼──────┐   ┌──────▼────┐      ┌─────▼────┐
-│PostgreSQL│   │   Redis   │      │  MinIO   │
+│MySQL     │   │   Redis   │      │  MinIO   │
 │          │   │(Pub/Sub)  │      │ (Storage)│
 └──────────┘   └───────────┘      └──────────┘
 
@@ -49,7 +49,7 @@ A production-grade, full-stack platform enabling real-time communication between
 ```bash
 # Clone and navigate
 git clone <repo>
-cd mute
+cd <repo>
 
 # Start all services
 docker-compose up --build
@@ -153,11 +153,10 @@ Audio → WebRTC → SFU → Speech-to-Text → Sign Generation → Avatar → D
 
 ## 🗄️ Database
 
-PostgreSQL with tables:
+MySQL with tables:
 - `users` - User accounts
 - `sessions` - Refresh tokens
 - `meetings` - Meeting records
-- `participants` - Meeting participants
 - `translation_logs` - Translation history
 
 ## 🔒 Security
@@ -172,7 +171,7 @@ PostgreSQL with tables:
 
 ### Production Checklist
 - [ ] Update JWT_SECRET in backend .env
-- [ ] Configure PostgreSQL with strong credentials
+- [ ] Configure MySQL with strong credentials
 - [ ] Set NODE_ENV=production
 - [ ] Enable HTTPS/TLS
 - [ ] Configure TURN servers for WebRTC
@@ -184,7 +183,7 @@ PostgreSQL with tables:
 **Backend:**
 ```
 PORT=4000
-DATABASE_URL=postgresql://user:pass@host/mute
+DATABASE_URL=mysql://user:pass@host/mute
 REDIS_URL=redis://redis:6379
 JWT_SECRET=<strong-random-secret>
 ```
@@ -198,7 +197,6 @@ VITE_WS_BASE_URL=http://localhost:4000
 ## 📚 Documentation
 
 - [Backend Guide](./backend/README.md)
-- [Database Schema](./docs/DATABASE_AUTH.md)
 - [WebRTC Setup](./docs/WEBRTC.md)
 - [UML Class Diagram](./docs/classdiagram.png)
 - [Data Flow Diagram](./docs/level1.png)
@@ -207,7 +205,7 @@ VITE_WS_BASE_URL=http://localhost:4000
 
 **Backend won't start?**
 - Verify `.env` file exists
-- Ensure PostgreSQL and Redis are running
+- Ensure MySQL and Redis are running
 - Check Docker logs: `docker logs mute-api`
 
 **Frontend can't reach backend?**
@@ -216,7 +214,7 @@ VITE_WS_BASE_URL=http://localhost:4000
 - Ensure backend is running
 
 **Database errors?**
-- Verify PostgreSQL is accessible
+- Verify MySQL is accessible
 - Check `DATABASE_URL` format
 - Ensure database user has proper permissions
 

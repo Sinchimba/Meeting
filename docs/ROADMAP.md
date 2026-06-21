@@ -27,7 +27,7 @@
 **Timeline:** 2-3 weeks after Phase 1
 
 ### Backend Requirements
-- [ ] Set up MongoDB models for:
+- [ ] Set up MySQL models for:
   - Users
   - Meetings
   - Messages

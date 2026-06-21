@@ -17,7 +17,7 @@ export default function Landing() {
           </h1>
           <div className="nav-buttons">
             <button onClick={() => navigate('/login')} className="nav-btn login-btn">
-              Sign In
+              sign in
             </button>
             <button onClick={() => navigate('/register')} className="nav-btn register-btn">
               Sign Up

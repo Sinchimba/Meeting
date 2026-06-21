@@ -1,6 +1,8 @@
-import { Hands } from '@mediapipe/hands';
-import { Camera } from '@mediapipe/camera_utils';
+/* global Hands, Camera */
 import api from './axiosConfig';
+
+const Hands = typeof window !== 'undefined' ? window.Hands : null;
+const Camera = typeof window !== 'undefined' ? window.Camera : null;
 
 export default class SignRecognitionService {
   constructor(videoElement, onSignDetected, useAIService = true) {

@@ -32,12 +32,11 @@ The frontend will run on http://localhost:5173
 ```
 backend/
 ├── src/
-│   ├── routes/         # API route handlers
-│   ├── models/         # MongoDB schemas
-│   ├── controllers/    # Business logic
-│   ├── middleware/     # Express middleware
-│   ├── services/       # Reusable services
-│   └── index.js        # Server entry point
+│   ├── modules/        # TypeORM entities and services
+│   ├── common/         # Shared utilities and guards
+│   ├── socket/         # Socket.IO gateway
+│   ├── main.ts         # Server entry point
+│   └── data-source.ts  # TypeORM config
 ├── .env                # Environment variables
 └── package.json        # Dependencies and scripts
 ```

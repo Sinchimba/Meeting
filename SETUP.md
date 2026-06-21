@@ -27,7 +27,7 @@ docker-compose up --build
 **Terminal 1 - Start Backend Dependencies:**
 ```bash
 cd /path/to/mute/backend
-docker-compose up -d  # Start postgres, redis, minio
+docker-compose up -d  # Start MySQL, redis, minio
 cp .env.example .env
 npm install
 npm run dev
@@ -105,9 +105,9 @@ curl -X POST http://localhost:4000/api/meetings \
 - Wrong URL? Verify `VITE_API_BASE_URL` in frontend/.env
 
 ### "Database connection failed"
-- PostgreSQL running? `docker ps | grep postgres`
-- Check database URL: should be `postgres://postgres:postgres@postgres:5432/mute`
-- For local: `postgresql://localhost:5432/mute`
+- MySQL running? `docker ps | grep mysql`
+- Check database URL: should be `mysql://mute:mute@mysql:3306/mute`
+- For local: `mysql://localhost:3307/mute`
 
 ### "Port already in use"
 ```bash
@@ -117,7 +117,7 @@ lsof -ti:4000 | xargs kill -9
 # Kill process using port 5173 (frontend)
 lsof -ti:5173 | xargs kill -9
 
-# Kill process using port 5432 (postgres)
+# Kill process using port 3307 (mysql)
 lsof -ti:5432 | xargs kill -9
 ```
 

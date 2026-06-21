@@ -1,4 +1,6 @@
 import 'reflect-metadata';
+import fs from 'fs';
+import path from 'path';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -9,17 +11,33 @@ import { Meeting } from './modules/meetings/meeting.entity';
 import { TranslationLog } from './modules/translation/translation.entity';
 import { Session } from './modules/auth/session.entity';
 
-const dbType = process.env.DB_TYPE || 'mysql';
+const DEFAULT_SQLITE_DB = path.resolve(__dirname, '../data/mute.sqlite');
+const rawDatabaseUrl = process.env.DATABASE_URL || '';
+const dbType = process.env.DB_TYPE || (rawDatabaseUrl.startsWith('mysql://') ? 'mysql' : 'sqlite');
+
+const sqliteDatabase = (() => {
+  if (dbType !== 'sqlite') return DEFAULT_SQLITE_DB;
+
+  if (rawDatabaseUrl.startsWith('sqlite://')) {
+    const sqlitePath = rawDatabaseUrl.replace(/^sqlite:\/\//, '');
+    return sqlitePath ? path.resolve(sqlitePath) : DEFAULT_SQLITE_DB;
+  }
+
+  return path.resolve(rawDatabaseUrl || DEFAULT_SQLITE_DB);
+})();
+
+if (dbType === 'sqlite') {
+  const sqliteDir = path.dirname(sqliteDatabase);
+  if (!fs.existsSync(sqliteDir)) {
+    fs.mkdirSync(sqliteDir, { recursive: true });
+  }
+}
+
 const databaseOptions: any =
   dbType === 'sqlite'
     ? {
         type: 'sqlite',
-        database: process.env.SQLITE_DATABASE || './data/sqlite.db',
-      }
-    : dbType === 'postgres'
-    ? {
-        type: 'postgres',
-        url: process.env.DATABASE_URL,
+        database: sqliteDatabase,
       }
     : {
         type: 'mysql',

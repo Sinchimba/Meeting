@@ -38,7 +38,7 @@
 
 ### 5. **Docker & Orchestration**
 - ✓ Root docker-compose.yml orchestrating:
-  - PostgreSQL (database)
+  - MySQL (database)
   - Redis (caching & pub/sub)
   - MinIO (object storage)
   - Backend API (Node.js)
@@ -59,7 +59,7 @@
 | Real-time Events | Socket.IO events | `backend/src/socket/socket.gateway.ts` |
 | Translation Logging | Entity + Service | `backend/src/modules/translation/` |
 | Frontend Integration | API clients + Stores | `frontend/src/api/`, `stores/` |
-| Database | PostgreSQL + TypeORM | `backend/src/data-source.ts` |
+| Database | MySQL + TypeORM | `backend/src/data-source.ts` |
 | Security | Helmet, CORS, JWT, Rate Limit | `backend/src/main.ts` |
 | Deployment | Docker + Docker Compose | Root `docker-compose.yml` |
 

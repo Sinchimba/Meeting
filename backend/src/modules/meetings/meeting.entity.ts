@@ -1,12 +1,5 @@
 import { Entity, PrimaryColumn, Column, CreateDateColumn } from 'typeorm';
 
-const getTimestampType = () => {
-  const dbType = process.env.DB_TYPE || 'mysql';
-  if (dbType === 'sqlite') return 'datetime';
-  if (dbType === 'postgres') return 'timestamptz';
-  return 'timestamp';
-};
-
 @Entity({ name: 'meetings' })
 export class Meeting {
   @PrimaryColumn()
@@ -19,7 +12,7 @@ export class Meeting {
   host_id!: string;
 
   @Column({
-    type: getTimestampType(),
+    type: 'datetime',
     nullable: true,
   })
   start_time!: Date | null;
