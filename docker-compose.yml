@@ -1,0 +1,142 @@
+version: '3.8'
+
+services:
+  # Database (MySQL)
+  mysql:
+    image: mysql:8.0
+    container_name: mute-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mute
+      MYSQL_USER: mute
+      MYSQL_PASSWORD: mute
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mute-network
+
+  # Cache & Pub/Sub
+  redis:
+    image: redis:7
+    container_name: mute-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mute-network
+
+  # S3-compatible storage
+  minio:
+    image: minio/minio
+    container_name: mute-storage
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mute-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mute-api
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+      NODE_ENV: development
+      DATABASE_URL: mysql://mute:mute@mysql:3306/mute
+      DB_TYPE: mysql
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: dev-secret-change-in-prod
+      JWT_EXPIRES_IN: 15m
+      REFRESH_TOKEN_EXPIRES_DAYS: 30
+      SFU_URL: http://sfu:3000
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      AI_SERVICE_URL: http://ai-service:5000
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/usr/src/app/src
+    networks:
+      - mute-network
+    command: npm run dev
+
+  # Frontend (Dev Server)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: mute-ui
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE_URL: http://localhost:4000/api
+      VITE_WS_BASE_URL: http://localhost:4000
+      VITE_SFU_URL: http://localhost:3000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    networks:
+      - mute-network
+    command: npm run dev
+
+  # Python AI Service (optional)
+  ai-service:
+    build:
+      context: ./python-ai
+      dockerfile: Dockerfile
+    container_name: mute-ai
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_ENV: development
+      FLASK_DEBUG: 1
+      API_HOST: 0.0.0.0
+      API_PORT: 5000
+    volumes:
+      - ./python-ai:/app
+    networks:
+      - mute-network
+    command: python3 app.py
+    profiles: ["with-ai"]
+
+volumes:
+  mysql-data:
+  miniodata:
+
+networks:
+  mute-network:
+    driver: bridge
