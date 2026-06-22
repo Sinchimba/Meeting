@@ -1,0 +1,33 @@
+services:
+  - type: web_service
+    name: mute-backend
+    env: node
+    branch: main
+    buildCommand: cd backend && npm ci && npm run build
+    startCommand: cd backend && npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_TYPE
+        value: mysql
+      - key: JWT_SECRET
+        generator: secret
+      - key: FRONTEND_URL
+        value: https://mute-frontend.onrender.com
+      - key: REDIS_URL
+        value: redis://localhost:6379
+      - key: AI_SERVICE_URL
+        value: https://<your-ai-service>.onrender.com
+
+  - type: static_site
+    name: mute-frontend
+    env: static
+    branch: main
+    buildCommand: cd frontend && npm ci && npm run build
+    publishPath: frontend/dist
+    envVars:
+      - key: VITE_BACKEND_URL
+        value: https://mute-backend.onrender.com
+      - key: VITE_API_BASE_URL
+        value: https://mute-backend.onrender.com/api

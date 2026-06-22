@@ -184,15 +184,29 @@ MySQL with tables:
 ```
 PORT=4000
 DATABASE_URL=mysql://user:pass@host/mute
+DB_TYPE=mysql
 REDIS_URL=redis://redis:6379
 JWT_SECRET=<strong-random-secret>
+FRONTEND_URL=https://<your-frontend>.onrender.com
+AI_SERVICE_URL=https://<your-ai-service>.onrender.com
 ```
 
 **Frontend:**
 ```
 VITE_API_BASE_URL=http://localhost:4000/api
-VITE_WS_BASE_URL=http://localhost:4000
+VITE_BACKEND_URL=http://localhost:4000
 ```
+
+### Render deployment
+
+A recommended Render configuration is available in `render.yaml`.
+
+- Deploy `backend` as a Render Web Service using `backend` as the build context.
+- Deploy `frontend` as a Render Static Site with `frontend/dist` as the publish directory.
+- Configure `DATABASE_URL` on Render to point to an external MySQL database.
+- Set `VITE_BACKEND_URL` and `VITE_API_BASE_URL` for the frontend to your backend URL.
+
+> Render does not provide a managed MySQL database in this repo, so use an external MySQL provider or host MySQL separately.
 
 ## 📚 Documentation
 
