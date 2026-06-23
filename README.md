@@ -72,7 +72,7 @@ npm run dev
 
 **Frontend:**
 ```bash
-cd frontend
+cd ui
 cp .env.example .env
 npm install
 npm run dev
@@ -96,7 +96,7 @@ mute/
 │   ├── Dockerfile
 │   └── README.md
 │
-├── frontend/                  # React + Vite
+├── ui/                  # React + Vite
 │   ├── src/
 │   │   ├── api/               # API clients
 │   │   ├── pages/             # Route pages
@@ -107,14 +107,14 @@ mute/
 │   ├── Dockerfile.dev
 │   └── .env.example
 │
-├── python-ai/                 # AI Microservices
+├── ai/                 # AI Microservices
 │   ├── app.py                 # FastAPI
 │   ├── inference.py           # Sign recognition
 │   ├── models.py              # ML models
 │   ├── requirements.txt
 │   └── Dockerfile
 │
-├── docs/                      # Documentation
+├── documentation/                      # Documentation
 │   ├── classdiagram.png       # UML diagram
 │   └── level1.png             # DFD diagram
 │
@@ -162,7 +162,7 @@ MySQL with tables:
 ## 🔒 Security
 
 - Helmet (security headers)
-- CORS (configured for frontend)
+- CORS (configured for ui)
 - Rate limiting (200 req/15min)
 - Input validation
 - JWT with secure secrets (rotate in prod)
@@ -187,7 +187,7 @@ DATABASE_URL=mysql://user:pass@host/mute
 DB_TYPE=mysql
 REDIS_URL=redis://redis:6379
 JWT_SECRET=<strong-random-secret>
-FRONTEND_URL=https://<your-frontend>.onrender.com
+FRONTEND_URL=https://<your-ui>.onrender.com
 AI_SERVICE_URL=https://<your-ai-service>.onrender.com
 ```
 
@@ -202,18 +202,18 @@ VITE_BACKEND_URL=http://localhost:4000
 A recommended Render configuration is available in `render.yaml`.
 
 - Deploy `backend` as a Render Web Service using `backend` as the build context.
-- Deploy `frontend` as a Render Static Site with `frontend/dist` as the publish directory.
+- Deploy `ui` as a Render Static Site with `ui/dist` as the publish directory.
 - Configure `DATABASE_URL` on Render to point to an external MySQL database.
-- Set `VITE_BACKEND_URL` and `VITE_API_BASE_URL` for the frontend to your backend URL.
+- Set `VITE_BACKEND_URL` and `VITE_API_BASE_URL` for the ui to your backend URL.
 
 > Render does not provide a managed MySQL database in this repo, so use an external MySQL provider or host MySQL separately.
 
 ## 📚 Documentation
 
 - [Backend Guide](./backend/README.md)
-- [WebRTC Setup](./docs/WEBRTC.md)
-- [UML Class Diagram](./docs/classdiagram.png)
-- [Data Flow Diagram](./docs/level1.png)
+- [WebRTC Setup](./documentation/WEBRTC.md)
+- [UML Class Diagram](./assets/classdiagram.png)
+- [Data Flow Diagram](./assets/level1.png)
 
 ## 🐛 Troubleshooting
 

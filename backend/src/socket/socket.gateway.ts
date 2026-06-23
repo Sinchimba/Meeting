@@ -28,7 +28,7 @@ export function createSocketServer(server: http.Server) {
   };
 
   io.on('connection', (socket) => {
-    socket.on('join-meeting', (data) => {
+    socket.on('join-meeting', async (data) => {
       try {
         const payload = verifyToken(data?.token)
         if (!data?.meetingId) {
@@ -38,29 +38,23 @@ export function createSocketServer(server: http.Server) {
         const meetingId = data.meetingId
         const meta: SocketUserMeta = {
           meetingId,
-          userId: data.userId || payload.sub,
+          userId: payload.sub,
           userName: data.userName || 'Anonymous',
-          role: data.role || payload.role || 'participant',
+          role: payload.role || 'standard',
         }
 
-        socket.join(meetingId)
+        await socket.join(meetingId)
         connectedUsers.set(socket.id, meta)
 
-        socket.to(meetingId).emit('participant-joined', {
-          socketId: socket.id,
-          ...meta,
-        })
-
         const roomSockets = io.sockets.adapter.rooms.get(meetingId) || new Set<string>()
-        const currentParticipants = Array.from(roomSockets)
-          .filter((id) => id !== socket.id)
+        const allParticipants = Array.from(roomSockets)
           .map((socketId) => {
             const info = connectedUsers.get(socketId)
             return info ? { socketId, ...info } : null
           })
           .filter(Boolean)
 
-        socket.emit('current-participants', currentParticipants)
+        io.to(meetingId).emit('participants-updated', allParticipants)
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Failed to join meeting'
         socket.emit('meeting-error', { message })
@@ -68,19 +62,20 @@ export function createSocketServer(server: http.Server) {
       }
     })
 
-    socket.on('send-message', (msg) => {
-      if (!msg?.meetingId) return
-      socket.to(msg.meetingId).emit('receive-message', msg)
-    })
-
     socket.on('speech-transcribed', (payload) => {
       if (!payload?.meetingId) return
-      socket.to(payload.meetingId).emit('receive-transcript', payload)
+      socket.to(payload.meetingId).emit('receive-transcript', {
+        ...payload,
+        from: socket.id
+      })
     })
 
     socket.on('sign-detected', (payload) => {
       if (!payload?.meetingId) return
-      socket.to(payload.meetingId).emit('receive-sign', payload)
+      socket.to(payload.meetingId).emit('receive-sign', {
+        ...payload,
+        from: socket.id
+      })
     })
 
     socket.on('offer', (data) => {
@@ -176,8 +171,18 @@ export function createSocketServer(server: http.Server) {
     socket.on('disconnect', () => {
       const meta = connectedUsers.get(socket.id)
       if (meta) {
-        socket.to(meta.meetingId).emit('participant-left', { socketId: socket.id })
         connectedUsers.delete(socket.id)
+        socket.to(meta.meetingId).emit('participant-left', { socketId: socket.id })
+
+        const roomSockets = io.sockets.adapter.rooms.get(meta.meetingId) || new Set<string>()
+        const remainingParticipants = Array.from(roomSockets)
+          .map((socketId) => {
+            const info = connectedUsers.get(socketId)
+            return info ? { socketId, ...info } : null
+          })
+          .filter(Boolean)
+
+        socket.to(meta.meetingId).emit('participants-updated', remainingParticipants)
       }
     })
   })

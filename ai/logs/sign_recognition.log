@@ -1,0 +1,6 @@
+2026-06-23 00:24:04,269 - utils - INFO - Initializing Sign Language Predictor...
+2026-06-23 00:24:04,271 - utils - ERROR - Error initializing predictor: module 'mediapipe' has no attribute 'solutions'
+2026-06-23 00:24:04,272 - utils - INFO - Starting Sign Language Recognition Service on 0.0.0.0:5000
+2026-06-23 00:38:37,889 - utils - INFO - Initializing Sign Language Predictor...
+2026-06-23 00:38:45,861 - utils - INFO - Predictor initialized successfully
+2026-06-23 00:38:45,863 - utils - INFO - Starting Sign Language Recognition Service on 0.0.0.0:5000

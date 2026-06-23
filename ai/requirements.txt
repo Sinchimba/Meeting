@@ -1,0 +1,10 @@
+Flask==2.3.3
+Flask-CORS==4.0.0
+opencv-python
+mediapipe
+numpy==1.26.4
+Pillow==10.0.1
+scikit-learn
+matplotlib
+scipy
+Werkzeug==2.3.7

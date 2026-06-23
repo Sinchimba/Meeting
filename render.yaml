@@ -24,8 +24,8 @@ services:
     name: mute-frontend
     env: static
     branch: main
-    buildCommand: cd frontend && npm ci && npm run build
-    publishPath: frontend/dist
+    buildCommand: cd ui && npm ci && npm run build
+    publishPath: ui/dist
     envVars:
       - key: VITE_BACKEND_URL
         value: https://mute-backend.onrender.com

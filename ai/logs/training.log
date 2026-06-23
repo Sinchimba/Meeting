@@ -1,0 +1,12 @@
+2026-06-23 00:16:59,481 - __main__ - INFO - No real training data found. Bootstrapping with synthetic dataset.
+2026-06-23 00:16:59,482 - __main__ - INFO - Generating synthetic data for bootstrapping...
+2026-06-23 00:17:04,395 - __main__ - INFO - Loaded 3120 samples with 26 classes
+2026-06-23 00:17:04,483 - __main__ - INFO - Training set: 2496 samples
+2026-06-23 00:17:04,484 - __main__ - INFO - Test set: 624 samples
+2026-06-23 00:17:04,487 - __main__ - INFO - Creating MLPClassifier model
+2026-06-23 00:17:04,488 - __main__ - INFO - Training MLPClassifier...
+2026-06-23 00:22:01,543 - __main__ - INFO - Evaluating on test set...
+2026-06-23 00:22:01,741 - __main__ - INFO - Test Accuracy: 1.0000
+2026-06-23 00:22:01,899 - __main__ - INFO - Model saved to /home/abuu-hudhayfah/projects/meet/Meeting/python-ai/models/sequence_recognizer.pkl
+2026-06-23 00:22:01,905 - __main__ - INFO - Metadata saved to /home/abuu-hudhayfah/projects/meet/Meeting/python-ai/models/sequence_recognizer_metadata.json
+2026-06-23 00:22:01,905 - __main__ - INFO - Training complete!

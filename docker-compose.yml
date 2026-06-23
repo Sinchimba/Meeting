@@ -95,7 +95,7 @@ services:
   # Frontend (Dev Server)
   frontend:
     build:
-      context: ./frontend
+      context: ./ui
       dockerfile: Dockerfile.dev
     container_name: mute-ui
     ports:
@@ -107,8 +107,8 @@ services:
     depends_on:
       - backend
     volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/public:/app/public
+      - ./ui/src:/app/src
+      - ./ui/public:/app/public
     networks:
       - mute-network
     command: npm run dev
@@ -116,7 +116,7 @@ services:
   # Python AI Service (optional)
   ai-service:
     build:
-      context: ./python-ai
+      context: ./ai
       dockerfile: Dockerfile
     container_name: mute-ai
     ports:
@@ -127,7 +127,7 @@ services:
       API_HOST: 0.0.0.0
       API_PORT: 5000
     volumes:
-      - ./python-ai:/app
+      - ./ai:/app
     networks:
       - mute-network
     command: python3 app.py

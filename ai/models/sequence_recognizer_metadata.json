@@ -1,0 +1,49 @@
+{
+  "model_name": "sklearn_mlp_model",
+  "timestamp": "2026-06-23T00:22:01.900226",
+  "config": {
+    "input_shape": [
+      21,
+      3
+    ],
+    "sequence_length": 30,
+    "num_classes": 26,
+    "lstm_units": 128,
+    "dropout_rate": 0.5,
+    "batch_size": 32,
+    "epochs": 100,
+    "learning_rate": 0.001,
+    "validation_split": 0.2
+  },
+  "signs": {
+    "hello": 0,
+    "goodbye": 1,
+    "yes": 2,
+    "no": 3,
+    "thank_you": 4,
+    "please": 5,
+    "help": 6,
+    "love": 7,
+    "sorry": 8,
+    "good": 9,
+    "bad": 10,
+    "ok": 11,
+    "water": 12,
+    "food": 13,
+    "friend": 14,
+    "family": 15,
+    "work": 16,
+    "home": 17,
+    "sleep": 18,
+    "happy": 19,
+    "sad": 20,
+    "angry": 21,
+    "confused": 22,
+    "tired": 23,
+    "excited": 24,
+    "calm": 25
+  },
+  "metrics": {
+    "test_accuracy": 1.0
+  }
+}
