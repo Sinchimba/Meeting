@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage'
 import MeetingRoom from './pages/MeetingRoom'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import SmsDashboard from './pages/SmsDashboard'
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -44,6 +45,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
           <Route path="/meeting/:meetingId" element={<ProtectedRoute><MeetingRoom /></ProtectedRoute>} />
+          <Route path="/admin/sms" element={<ProtectedRoute><SmsDashboard /></ProtectedRoute>} />
         </Routes>
       </div>
     </Router>

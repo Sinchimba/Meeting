@@ -133,6 +133,22 @@ class ApiClient {
     return response.data;
   }
 
+  async inviteToMeeting(id: string, phone: string) {
+    const response = await this.client.post(`/meetings/${id}/invite`, { phone });
+    return response.data;
+  }
+
+  // SMS Monitoring & Retry
+  async getSmsLogs() {
+    const response = await this.client.get('/sms/logs');
+    return response.data;
+  }
+
+  async retrySms(id: string) {
+    const response = await this.client.post(`/sms/retry/${id}`);
+    return response.data;
+  }
+
   // Health
   async health() {
     const response = await this.client.get('/health');

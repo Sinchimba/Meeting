@@ -17,6 +17,7 @@ const auth_controller_1 = require("./modules/auth/auth.controller");
 const users_controller_1 = require("./modules/users/users.controller");
 const meetings_controller_1 = require("./modules/meetings/meetings.controller");
 const ai_controller_1 = require("./modules/ai/ai.controller");
+const sms_controller_1 = require("./modules/sms/sms.controller");
 // Load environment variables
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -34,6 +35,7 @@ app.use('/api/auth', auth_controller_1.authRouter);
 app.use('/api/users', users_controller_1.usersRouter);
 app.use('/api/meetings', meetings_controller_1.meetingsRouter);
 app.use('/api/ai', ai_controller_1.aiRouter);
+app.use('/api/sms', sms_controller_1.smsRouter);
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 const server = http_1.default.createServer(app);
 (0, socket_gateway_1.createSocketServer)(server);

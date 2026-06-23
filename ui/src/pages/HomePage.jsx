@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { apiClient } from '../api/client'
-import { LogOut, Video, PlusCircle, LogIn, Users, Mic, HandMetal } from 'lucide-react'
+import { LogOut, Video, PlusCircle, LogIn, Users, Mic, HandMetal, MessageSquare } from 'lucide-react'
 import './HomePage.css'
 
 export default function HomePage() {
@@ -79,11 +79,11 @@ export default function HomePage() {
     try {
       setSmsLoading(true)
       setSmsError('')
-      // Note: This endpoint may not be implemented on backend yet
-      // Placeholder for future SMS functionality
-      setSmsError('SMS functionality coming soon')
+      await apiClient.inviteToMeeting(createdMeeting.meetingId, phone)
+      alert('SMS invitation sent successfully (cost-free gateway)!')
+      setPhone('')
     } catch (err) {
-      setSmsError(err.response?.data?.error || 'Failed to send SMS')
+      setSmsError(err.response?.data?.error || err.message || 'Failed to send SMS')
     } finally {
       setSmsLoading(false)
     }
@@ -119,6 +119,9 @@ export default function HomePage() {
         </h1>
         <div className="user-menu">
           {user && <div className="username-badge"><div className="avatar">{user.name.charAt(0).toUpperCase()}</div>{user.name}</div>}
+          <button onClick={() => navigate('/admin/sms')} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', fontSize: '14px', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', color: 'white', marginRight: '10px', background: 'rgba(255,255,255,0.05)', cursor: 'pointer' }}>
+            <MessageSquare size={16} /> SMS Logs
+          </button>
           <button onClick={handleLogout} className="logout-btn">
             <LogOut size={16} /> Logout
           </button>

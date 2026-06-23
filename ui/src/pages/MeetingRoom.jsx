@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import io from 'socket.io-client'
-import { Video, Users, Mic, MicOff, VideoOff, Copy, PhoneOff, HandMetal, CheckCircle2, AlertCircle, Clock } from 'lucide-react'
+import { Video, Users, Mic, MicOff, VideoOff, Copy, PhoneOff, HandMetal, CheckCircle2, AlertCircle, Clock, UserPlus, MessageSquare } from 'lucide-react'
 import WebRTCService from '../utils/WebRTCService'
 import SpeechToTextService from '../utils/SpeechToTextService'
 import SignRecognitionService from '../utils/SignRecognitionService'
@@ -38,6 +38,12 @@ export default function MeetingRoom() {
   const [userRole, setUserRole] = useState('standard')
   const [meetingHostId, setMeetingHostId] = useState(null)
   const [meetingDetails, setMeetingDetails] = useState(null)
+  
+  // Invite Modal States
+  const [showInviteModal, setShowInviteModal] = useState(false)
+  const [invitePhone, setInvitePhone] = useState('')
+  const [inviteLoading, setInviteLoading] = useState(false)
+  const [inviteError, setInviteError] = useState('')
   
   // Text to Speech
   const [ttsEnabled, setTtsEnabled] = useState(true)
@@ -434,6 +440,24 @@ export default function MeetingRoom() {
     alert('Meeting link copied to clipboard!')
   }
 
+  const sendSmsInvite = async () => {
+    if (!invitePhone) {
+      setInviteError('Please enter a phone number')
+      return
+    }
+    try {
+      setInviteLoading(true)
+      setInviteError('')
+      await apiClient.inviteToMeeting(meetingId, invitePhone)
+      alert('SMS invitation sent successfully (cost-free gateway)!')
+      setInvitePhone('')
+    } catch (err) {
+      setInviteError(err.response?.data?.error || err.message || 'Failed to send SMS')
+    } finally {
+      setInviteLoading(false)
+    }
+  }
+
   const handleAdminMute = (targetSocketId) => {
     if (socket && isCurrentUserHost) {
       console.log('Admin muting participant:', targetSocketId)
@@ -580,6 +604,20 @@ export default function MeetingRoom() {
               >
                 <span className="control-icon"><Copy size={20} /></span>
               </button>
+              <button
+                onClick={() => setShowInviteModal(true)}
+                className="control-btn invite-btn"
+                title="Invite participants"
+              >
+                <span className="control-icon"><UserPlus size={20} /></span>
+              </button>
+              <button
+                onClick={() => navigate('/admin/sms')}
+                className="control-btn sms-logs-btn"
+                title="SMS Delivery Outbox"
+              >
+                <span className="control-icon"><MessageSquare size={20} /></span>
+              </button>
               {isCurrentUserHost ? (
                 <button
                   onClick={handleEndMeetingForAll}
@@ -719,6 +757,51 @@ export default function MeetingRoom() {
 
         </div>
       </div>
+
+      {/* Invite Modal */}
+      {showInviteModal && (
+        <div className="modal-overlay" onClick={() => { setShowInviteModal(false); setInvitePhone(''); setInviteError(''); }}>
+          <div className="modal-content glass-panel" onClick={(e) => e.stopPropagation()}>
+            <h3>Invite Participants</h3>
+            <p>Share this meeting link with others to join:</p>
+            
+            <div className="share-link-container">
+              <input
+                type="text"
+                value={`${window.location.origin}/meeting/${meetingId}`}
+                readOnly
+                className="share-link-input"
+              />
+              <button onClick={copyMeetingLink} className="btn btn-secondary">
+                Copy Link
+              </button>
+            </div>
+
+            <div className="sms-invite">
+              <p>Or send an SMS invite:</p>
+              <div className="sms-form">
+                <input
+                  type="text"
+                  placeholder="+25575234567"
+                  value={invitePhone}
+                  onChange={(e) => setInvitePhone(e.target.value)}
+                  className="form-input"
+                />
+                <button onClick={sendSmsInvite} className="btn btn-secondary" disabled={inviteLoading}>
+                  {inviteLoading ? 'Sending...' : 'Send SMS'}
+                </button>
+              </div>
+              {inviteError && <div className="error-message">{inviteError}</div>}
+            </div>
+
+            <div className="modal-actions">
+              <button onClick={() => { setShowInviteModal(false); setInvitePhone(''); setInviteError(''); }} className="btn btn-outline">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

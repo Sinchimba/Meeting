@@ -10,6 +10,7 @@ import { User } from './modules/users/user.entity';
 import { Meeting } from './modules/meetings/meeting.entity';
 import { TranslationLog } from './modules/translation/translation.entity';
 import { Session } from './modules/auth/session.entity';
+import { SmsLog } from './modules/sms/sms-log.entity';
 
 const DEFAULT_SQLITE_DB = path.resolve(__dirname, '../data/mute.sqlite');
 const rawDatabaseUrl = process.env.DATABASE_URL || '';
@@ -48,7 +49,7 @@ export const AppDataSource = new DataSource({
   ...databaseOptions,
   synchronize: true,
   logging: false,
-  entities: [User, Meeting, TranslationLog, Session],
+  entities: [User, Meeting, TranslationLog, Session, SmsLog],
 } as DataSourceOptions);
 
 export default AppDataSource;

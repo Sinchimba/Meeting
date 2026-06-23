@@ -14,6 +14,7 @@ const user_entity_1 = require("./modules/users/user.entity");
 const meeting_entity_1 = require("./modules/meetings/meeting.entity");
 const translation_entity_1 = require("./modules/translation/translation.entity");
 const session_entity_1 = require("./modules/auth/session.entity");
+const sms_log_entity_1 = require("./modules/sms/sms-log.entity");
 const DEFAULT_SQLITE_DB = path_1.default.resolve(__dirname, '../data/mute.sqlite');
 const rawDatabaseUrl = process.env.DATABASE_URL || '';
 const dbType = process.env.DB_TYPE || (rawDatabaseUrl.startsWith('mysql://') ? 'mysql' : 'sqlite');
@@ -45,6 +46,6 @@ exports.AppDataSource = new typeorm_1.DataSource({
     ...databaseOptions,
     synchronize: true,
     logging: false,
-    entities: [user_entity_1.User, meeting_entity_1.Meeting, translation_entity_1.TranslationLog, session_entity_1.Session],
+    entities: [user_entity_1.User, meeting_entity_1.Meeting, translation_entity_1.TranslationLog, session_entity_1.Session, sms_log_entity_1.SmsLog],
 });
 exports.default = exports.AppDataSource;

@@ -197,16 +197,16 @@ VITE_API_BASE_URL=http://localhost:4000/api
 VITE_BACKEND_URL=http://localhost:4000
 ```
 
-### Render deployment
+### Render deployment & Cost-Free Hosting
 
-A recommended Render configuration is available in `render.yaml`.
+A recommended Render configuration is available in `render.yaml`. The platform is fully designed to run under a **100% cost-free hosting model**:
 
-- Deploy `backend` as a Render Web Service using `backend` as the build context.
-- Deploy `ui` as a Render Static Site with `ui/dist` as the publish directory.
-- Configure `DATABASE_URL` on Render to point to an external MySQL database.
-- Set `VITE_BACKEND_URL` and `VITE_API_BASE_URL` for the ui to your backend URL.
-
-> Render does not provide a managed MySQL database in this repo, so use an external MySQL provider or host MySQL separately.
+1. **Database (SQLite)**: Set `DB_TYPE=sqlite` and omit `DATABASE_URL` to use a local, zero-maintenance SQLite database. This avoids paying for a managed cloud database.
+2. **Media Relay (STUN/TURN)**: Integrated with the free TURN/STUN servers from the Metered Open Relay project, allowing global connections (e.g. Dar es Salaam to Arusha) behind symmetric NATs without incurring bandwidth fees.
+3. **App Services (Render)**:
+   - Deploy `ui` as a **Render Static Site** (always free). Set `VITE_BACKEND_URL` and `VITE_API_BASE_URL` to your backend URL.
+   - Deploy `backend` as a **Render Web Service** on the Free Instance Type.
+4. **SMS Gateway**: Simulated as a cost-free gateway logging invitations in backend stdout logs to avoid paying for third-party messaging services.
 
 ## 📚 Documentation
 

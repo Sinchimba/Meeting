@@ -13,6 +13,7 @@ import { authRouter } from './modules/auth/auth.controller';
 import { usersRouter } from './modules/users/users.controller';
 import { meetingsRouter } from './modules/meetings/meetings.controller';
 import { aiRouter } from './modules/ai/ai.controller';
+import { smsRouter } from './modules/sms/sms.controller';
 
 // Load environment variables
 dotenv.config();
@@ -36,6 +37,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/meetings', meetingsRouter);
 app.use('/api/ai', aiRouter);
+app.use('/api/sms', smsRouter);
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 
 const server = http.createServer(app);
